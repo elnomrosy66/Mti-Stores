@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Stores" Class="dbDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-33LB82J\Hossam;Initial Catalog=Stores;Integrated Security=True" SettingsObjectName="MTI_Stores_Manager.Properties.Settings" SettingsPropertyName="StoresConnectionString2" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.items" Member="items">
+    <Type Name="item">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="store_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="locker" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="row" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="cell" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="main_unit" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="rate" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="requestLimit" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="item_unites_relation" Member="unites_relations" ThisKey="id" OtherKey="item_id" Type="unites_relation" />
+      <Association Name="item_movement" Member="movements" ThisKey="id" OtherKey="item_id" Type="movement" />
+      <Association Name="store_item" Member="store" ThisKey="store_id" OtherKey="id" Type="store" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.users" Member="users">
+    <Type Name="user">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="user_name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="pass" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="type" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="allowed_store" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="user_user_store" Member="user_stores" ThisKey="id" OtherKey="user_id" Type="user_store" />
+      <Association Name="user_movements_header" Member="movements_headers" ThisKey="id" OtherKey="user_id" Type="movements_header" />
+    </Type>
+  </Table>
+  <Table Name="dbo.stores" Member="stores">
+    <Type Name="store">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="store_item" Member="items" ThisKey="id" OtherKey="store_id" Type="item" />
+      <Association Name="store_user_store" Member="user_stores" ThisKey="id" OtherKey="store_id" Type="user_store" />
+    </Type>
+  </Table>
+  <Table Name="dbo.unites" Member="unites">
+    <Type Name="unite">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="NVarChar(250) NOT NULL" CanBeNull="false" />
+      <Association Name="unite_unites_relation" Member="unites_relations" ThisKey="id" OtherKey="sup_unit" Type="unites_relation" />
+      <Association Name="unite_movement" Member="movements" ThisKey="id" OtherKey="unit_id" Type="movement" />
+    </Type>
+  </Table>
+  <Table Name="dbo.unites_relations" Member="unites_relations">
+    <Type Name="unites_relation">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="item_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="sup_unit" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ratio" Type="System.Decimal" DbType="Decimal(18,0) NOT NULL" CanBeNull="false" />
+      <Association Name="item_unites_relation" Member="item" ThisKey="item_id" OtherKey="id" Type="item" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="unite_unites_relation" Member="unite" ThisKey="sup_unit" OtherKey="id" Type="unite" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.user_store" Member="user_stores">
+    <Type Name="user_store">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="user_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="store_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="store_user_store" Member="store" ThisKey="store_id" OtherKey="id" Type="store" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="user_user_store" Member="user" ThisKey="user_id" OtherKey="id" Type="user" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.movements" Member="movements">
+    <Type Name="movement">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="item_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="qty" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="unit_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="mvt_id" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="qty_unit" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Association Name="item_movement" Member="item" ThisKey="item_id" OtherKey="id" Type="item" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="unite_movement" Member="unite" ThisKey="unit_id" OtherKey="id" Type="unite" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+      <Association Name="movements_header_movement" Member="movements_header" ThisKey="mvt_id" OtherKey="id" Type="movements_header" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.movements_header" Member="movements_headers">
+    <Type Name="movements_header">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="place" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="reciever" Type="System.String" DbType="NVarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="store_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="date" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="user_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="approved" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="userApproved" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="type" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="number" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="movements_header_movement" Member="movements" ThisKey="id" OtherKey="mvt_id" Type="movement" />
+      <Association Name="user_movements_header" Member="user" ThisKey="user_id" OtherKey="id" Type="user" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+</Database>
